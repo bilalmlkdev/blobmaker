@@ -20,8 +20,6 @@ function App() {
     setColorSettings,
     is3D,
     toggle3D,
-    rotation3D,
-    setRotation3D,
     randomize,
     reset,
   } = useBlob();
@@ -36,16 +34,15 @@ function App() {
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-zinc-950 text-zinc-100 font-sans">
-      <BlobPreview
-        blobStyle={blobStyle}
-        shape={shape}
-        morphIntensity={displaySettings.morphIntensity}
-        animationSettings={animationSettings}
-        effectSettings={effectSettings}
-        is3D={is3D}
-        rotation3D={rotation3D}
-        onRotation3DChange={setRotation3D}
-      />
+<BlobPreview
+  blobStyle={blobStyle}
+  shape={shape}
+  displaySettings={displaySettings}
+  animationSettings={animationSettings}
+  effectSettings={effectSettings}
+  colorSettings={colorSettings}
+  is3D={is3D}
+/>
 
       {isSidebarOpen ? (
         <Sidebar
