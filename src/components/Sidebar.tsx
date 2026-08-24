@@ -10,12 +10,16 @@ import {
   Sparkles,
   Download,
   Check,
+  FileImage,
+  FileCode2,
 } from "lucide-react";
 import Slider from "./Slider";
 import ColorPickerRow from "./ColorPickerRow";
+import { toPng, toSvg } from "html-to-image";
 import type {
   DisplaySettings,
   AnimationSettings,
+  EffectSettings,
   ColorSettings,
   ColorMode,
 } from "../hooks/useBlob";
@@ -29,6 +33,8 @@ interface Props {
   onDisplaySettingsChange: (settings: DisplaySettings) => void;
   animationSettings: AnimationSettings;
   onAnimationSettingsChange: (settings: AnimationSettings) => void;
+  effectSettings: EffectSettings;
+  onEffectSettingsChange: (settings: EffectSettings) => void;
   colorSettings: ColorSettings;
   onColorSettingsChange: (settings: ColorSettings) => void;
 }
@@ -52,6 +58,8 @@ export default function Sidebar({
   onDisplaySettingsChange,
   animationSettings,
   onAnimationSettingsChange,
+  effectSettings,
+  onEffectSettingsChange,
   colorSettings,
   onColorSettingsChange,
 }: Props) {
@@ -72,6 +80,16 @@ export default function Sidebar({
       ...animationSettings,
       [key]: value,
     });
+  };
+
+  const updateEffectSetting = (
+    key: keyof EffectSettings,
+    value: number | string,
+  ) => {
+    onEffectSettingsChange({
+      ...effectSettings,
+      [key]: value,
+    } as EffectSettings);
   };
 
   // Color settings update helpers
@@ -117,8 +135,29 @@ export default function Sidebar({
     });
   };
 
+  // Download handlers
+  const handleDownloadPNG = async () => {
+    const blobElement = document.getElementById("blob-container");
+    if (!blobElement) return;
+    const dataUrl = await toPng(blobElement, { cacheBust: true });
+    const link = document.createElement("a");
+    link.download = "blob.png";
+    link.href = dataUrl;
+    link.click();
+  };
+
+  const handleDownloadSVG = async () => {
+    const blobElement = document.getElementById("blob-container");
+    if (!blobElement) return;
+    const dataUrl = await toSvg(blobElement, { cacheBust: true });
+    const link = document.createElement("a");
+    link.download = "blob.svg";
+    link.href = dataUrl;
+    link.click();
+  };
+
   return (
-    <aside className="absolute top-6 right-6 w-80 max-w-[calc(100vw-3rem)] p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl z-10">
+    <aside className="absolute top-6 right-6 w-80 max-w-[calc(100vw-3rem)] p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl z-10 max-h-[calc(100vh-3rem)] overflow-y-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -233,7 +272,7 @@ export default function Sidebar({
 
         {activeTab === "colors" && (
           <div>
-            {/* Toggle: Solid Color */}
+            {/* Solid color toggle */}
             <div className="mb-2">
               <button
                 onClick={() => setColorMode("solid")}
@@ -259,7 +298,7 @@ export default function Sidebar({
               )}
             </div>
 
-            {/* Toggle: Gradient */}
+            {/* Gradient toggle */}
             <div>
               <button
                 onClick={() => setColorMode("gradient")}
@@ -359,13 +398,58 @@ export default function Sidebar({
         )}
 
         {activeTab === "effects" && (
-          <div className="text-sm text-zinc-400">
-            <p className="text-center mt-8">Effect controls coming soon</p>
+          <div>
+            <ColorPickerRow
+              label="Emissive Color"
+              color={effectSettings.emissiveColor}
+              onChange={(c) => updateEffectSetting("emissiveColor", c)}
+            />
+            <Slider
+              label="Emissive Intensity"
+              value={effectSettings.emissiveIntensity}
+              min={0.2}
+              max={1}
+              step={0.01}
+              onChange={(v) => updateEffectSetting("emissiveIntensity", v)}
+            />
+            <Slider
+              label="Reflection Strength"
+              value={effectSettings.reflectionStrength}
+              min={0.3}
+              max={1}
+              step={0.01}
+              onChange={(v) => updateEffectSetting("reflectionStrength", v)}
+            />
+            <Slider
+              label="Surface Roughness"
+              value={effectSettings.roughness}
+              min={0.5}
+              max={1}
+              step={0.01}
+              onChange={(v) => updateEffectSetting("roughness", v)}
+            />
           </div>
         )}
+
         {activeTab === "download" && (
-          <div className="text-sm text-zinc-400">
-            <p className="text-center mt-8">Download options coming soon</p>
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={handleDownloadPNG}
+              className="flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-violet-600 hover:bg-violet-500 transition-colors text-sm font-medium"
+            >
+              <FileImage className="w-4 h-4" />
+              Download as PNG
+            </button>
+            <button
+              onClick={handleDownloadSVG}
+              className="flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium"
+            >
+              <FileCode2 className="w-4 h-4" />
+              Download as SVG
+            </button>
+            <p className="text-xs text-zinc-500 text-center mt-2">
+              Downloads a snapshot of the current blob with effects.
+            </p>
           </div>
         )}
       </div>

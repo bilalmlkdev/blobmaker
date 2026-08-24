@@ -14,6 +14,8 @@ function App() {
     setDisplaySettings,
     animationSettings,
     setAnimationSettings,
+    effectSettings,
+    setEffectSettings,
     colorSettings,
     setColorSettings,
     randomize,
@@ -35,6 +37,7 @@ function App() {
         shape={shape}
         morphIntensity={displaySettings.morphIntensity}
         animationSettings={animationSettings}
+        effectSettings={effectSettings}
       />
 
       {isSidebarOpen ? (
@@ -47,6 +50,8 @@ function App() {
           onDisplaySettingsChange={setDisplaySettings}
           animationSettings={animationSettings}
           onAnimationSettingsChange={setAnimationSettings}
+          effectSettings={effectSettings}
+          onEffectSettingsChange={setEffectSettings}
           colorSettings={colorSettings}
           onColorSettingsChange={setColorSettings}
         />

@@ -20,6 +20,13 @@ export interface AnimationSettings {
   animationSpeed: number;
 }
 
+export interface EffectSettings {
+  emissiveColor: string;
+  emissiveIntensity: number;
+  reflectionStrength: number;
+  roughness: number;
+}
+
 export type ColorMode = "solid" | "gradient";
 
 export interface ColorSettings {
@@ -48,6 +55,13 @@ export const defaultDisplaySettings: DisplaySettings = {
 export const defaultAnimationSettings: AnimationSettings = {
   noiseScale: 0.4,
   animationSpeed: 0.2,
+};
+
+export const defaultEffectSettings: EffectSettings = {
+  emissiveColor: "#ffffff",
+  emissiveIntensity: 0.2,
+  reflectionStrength: 0.3,
+  roughness: 0.5,
 };
 
 export const defaultColorSettings: ColorSettings = {
@@ -144,6 +158,9 @@ export function useBlob() {
   const [animationSettings, setAnimationSettings] = useState<AnimationSettings>(
     defaultAnimationSettings,
   );
+  const [effectSettings, setEffectSettings] = useState<EffectSettings>(
+    defaultEffectSettings,
+  );
   const [colorSettings, setColorSettings] =
     useState<ColorSettings>(defaultColorSettings);
 
@@ -160,6 +177,7 @@ export function useBlob() {
     setShape(generateRandomShape());
     setDisplaySettings(defaultDisplaySettings);
     setAnimationSettings(defaultAnimationSettings);
+    setEffectSettings(defaultEffectSettings);
     setColorSettings(defaultColorSettings);
   };
 
@@ -170,6 +188,8 @@ export function useBlob() {
     setDisplaySettings,
     animationSettings,
     setAnimationSettings,
+    effectSettings,
+    setEffectSettings,
     colorSettings,
     setColorSettings,
     randomize,
