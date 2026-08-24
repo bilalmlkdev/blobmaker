@@ -20,8 +20,8 @@ export type ColorMode = "solid" | "gradient";
 export interface ColorSettings {
   mode: ColorMode;
   solidColor: string;
-  gradientColors: [string, string, string];
-  gradientMixes: [number, number, number];
+  gradientColors: [string, string, string, string]; // now 4 colors
+  gradientMixes: [number, number, number, number]; // now 4 mixes
 }
 
 export interface BlobStyle {
@@ -43,8 +43,8 @@ export const defaultDisplaySettings: DisplaySettings = {
 export const defaultColorSettings: ColorSettings = {
   mode: "gradient",
   solidColor: "#8b5cf6",
-  gradientColors: ["#8b5cf6", "#d946ef", "#f59e0b"],
-  gradientMixes: [0.8, 0.6, 0.3],
+  gradientColors: ["#8b5cf6", "#d946ef", "#f59e0b", "#3b82f6"],
+  gradientMixes: [0.8, 0.6, 0.3, 0.15],
 };
 
 // ---------- Helpers ----------
@@ -113,8 +113,9 @@ export function generateBlob(
     const c1 = applyLightIntensity(gradientColors[0], lightIntensity);
     const c2 = applyLightIntensity(gradientColors[1], lightIntensity);
     const c3 = applyLightIntensity(gradientColors[2], lightIntensity);
+    const c4 = applyLightIntensity(gradientColors[3], lightIntensity);
 
-    background = `linear-gradient(${gradientAngle}deg, rgba(${c1.r}, ${c1.g}, ${c1.b}, ${gradientMixes[0]}), rgba(${c2.r}, ${c2.g}, ${c2.b}, ${gradientMixes[1]}), rgba(${c3.r}, ${c3.g}, ${c3.b}, ${gradientMixes[2]}))`;
+    background = `linear-gradient(${gradientAngle}deg, rgba(${c1.r}, ${c1.g}, ${c1.b}, ${gradientMixes[0]}), rgba(${c2.r}, ${c2.g}, ${c2.b}, ${gradientMixes[1]}), rgba(${c3.r}, ${c3.g}, ${c3.b}, ${gradientMixes[2]}), rgba(${c4.r}, ${c4.g}, ${c4.b}, ${gradientMixes[3]}))`;
   }
 
   return {

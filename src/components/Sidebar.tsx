@@ -72,6 +72,7 @@ export default function Sidebar({
       string,
       string,
       string,
+      string,
     ];
     newColors[index] = color;
     onColorSettingsChange({
@@ -82,6 +83,7 @@ export default function Sidebar({
 
   const updateGradientMix = (index: number, value: number) => {
     const newMixes = [...colorSettings.gradientMixes] as [
+      number,
       number,
       number,
       number,
@@ -274,6 +276,12 @@ export default function Sidebar({
                     color={colorSettings.gradientColors[2]}
                     onChange={(c) => updateGradientColor(2, c)}
                   />
+                  <ColorPickerRow
+                    label="Color 4"
+                    color={colorSettings.gradientColors[3]}
+                    onChange={(c) => updateGradientColor(3, c)}
+                  />
+
                   <div className="mt-4">
                     <Slider
                       label="Color Mix 1"
@@ -298,6 +306,14 @@ export default function Sidebar({
                       max={1}
                       step={0.01}
                       onChange={(v) => updateGradientMix(2, v)}
+                    />
+                    <Slider
+                      label="Color Mix 4"
+                      value={colorSettings.gradientMixes[3]}
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      onChange={(v) => updateGradientMix(3, v)}
                     />
                   </div>
                 </div>
