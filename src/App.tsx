@@ -20,6 +20,8 @@ function App() {
     setColorSettings,
     is3D,
     toggle3D,
+    rotation3D,
+    setRotation3D,
     randomize,
     reset,
   } = useBlob();
@@ -41,6 +43,8 @@ function App() {
         animationSettings={animationSettings}
         effectSettings={effectSettings}
         is3D={is3D}
+        rotation3D={rotation3D}
+        onRotation3DChange={setRotation3D}
       />
 
       {isSidebarOpen ? (

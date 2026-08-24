@@ -27,6 +27,11 @@ export interface EffectSettings {
   roughness: number;
 }
 
+export interface Rotation3D {
+  x: number;
+  y: number;
+}
+
 export type ColorMode = "solid" | "gradient";
 
 export interface ColorSettings {
@@ -68,6 +73,11 @@ export const defaultEffectSettings: EffectSettings = {
   emissiveIntensity: 0.2,
   reflectionStrength: 0.3,
   roughness: 0.5,
+};
+
+export const defaultRotation3D: Rotation3D = {
+  x: 0,
+  y: 0,
 };
 
 export const defaultColorSettings: ColorSettings = {
@@ -169,7 +179,8 @@ export function useBlob() {
   );
   const [colorSettings, setColorSettings] =
     useState<ColorSettings>(defaultColorSettings);
-  const [is3D, setIs3D] = useState<boolean>(true); // default 3D mode
+  const [is3D, setIs3D] = useState<boolean>(true);
+  const [rotation3D, setRotation3D] = useState<Rotation3D>(defaultRotation3D);
 
   const blobStyle = useMemo(
     () => generateBlob(shape, displaySettings, colorSettings),
@@ -186,7 +197,8 @@ export function useBlob() {
     setAnimationSettings(defaultAnimationSettings);
     setEffectSettings(defaultEffectSettings);
     setColorSettings(defaultColorSettings);
-    setIs3D(true); // reset to 3D mode
+    setIs3D(true);
+    setRotation3D(defaultRotation3D);
   };
 
   const toggle3D = () => setIs3D((prev) => !prev);
@@ -204,6 +216,8 @@ export function useBlob() {
     setColorSettings,
     is3D,
     toggle3D,
+    rotation3D,
+    setRotation3D,
     randomize,
     reset,
   };
