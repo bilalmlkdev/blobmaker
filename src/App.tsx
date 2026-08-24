@@ -9,8 +9,11 @@ import { Settings } from "lucide-react";
 function App() {
   const {
     blobStyle,
+    shape,
     displaySettings,
     setDisplaySettings,
+    animationSettings,
+    setAnimationSettings,
     colorSettings,
     setColorSettings,
     randomize,
@@ -27,7 +30,12 @@ function App() {
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-zinc-950 text-zinc-100 font-sans">
-      <BlobPreview blobStyle={blobStyle} />
+      <BlobPreview
+        blobStyle={blobStyle}
+        shape={shape}
+        morphIntensity={displaySettings.morphIntensity}
+        animationSettings={animationSettings}
+      />
 
       {isSidebarOpen ? (
         <Sidebar
@@ -37,6 +45,8 @@ function App() {
           onGetCode={() => setIsCodeModalOpen(true)}
           displaySettings={displaySettings}
           onDisplaySettingsChange={setDisplaySettings}
+          animationSettings={animationSettings}
+          onAnimationSettingsChange={setAnimationSettings}
           colorSettings={colorSettings}
           onColorSettingsChange={setColorSettings}
         />

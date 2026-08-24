@@ -15,6 +15,7 @@ import Slider from "./Slider";
 import ColorPickerRow from "./ColorPickerRow";
 import type {
   DisplaySettings,
+  AnimationSettings,
   ColorSettings,
   ColorMode,
 } from "../hooks/useBlob";
@@ -26,6 +27,8 @@ interface Props {
   onGetCode: () => void;
   displaySettings: DisplaySettings;
   onDisplaySettingsChange: (settings: DisplaySettings) => void;
+  animationSettings: AnimationSettings;
+  onAnimationSettingsChange: (settings: AnimationSettings) => void;
   colorSettings: ColorSettings;
   onColorSettingsChange: (settings: ColorSettings) => void;
 }
@@ -47,6 +50,8 @@ export default function Sidebar({
   onGetCode,
   displaySettings,
   onDisplaySettingsChange,
+  animationSettings,
+  onAnimationSettingsChange,
   colorSettings,
   onColorSettingsChange,
 }: Props) {
@@ -55,6 +60,16 @@ export default function Sidebar({
   const updateDisplaySetting = (key: keyof DisplaySettings, value: number) => {
     onDisplaySettingsChange({
       ...displaySettings,
+      [key]: value,
+    });
+  };
+
+  const updateAnimationSetting = (
+    key: keyof AnimationSettings,
+    value: number,
+  ) => {
+    onAnimationSettingsChange({
+      ...animationSettings,
       [key]: value,
     });
   };
@@ -323,10 +338,26 @@ export default function Sidebar({
         )}
 
         {activeTab === "animate" && (
-          <div className="text-sm text-zinc-400">
-            <p className="text-center mt-8">Animation controls coming soon</p>
+          <div>
+            <Slider
+              label="Noise Scale"
+              value={animationSettings.noiseScale}
+              min={0}
+              max={20}
+              step={0.01}
+              onChange={(v) => updateAnimationSetting("noiseScale", v)}
+            />
+            <Slider
+              label="Animation Speed"
+              value={animationSettings.animationSpeed}
+              min={0}
+              max={1}
+              step={0.01}
+              onChange={(v) => updateAnimationSetting("animationSpeed", v)}
+            />
           </div>
         )}
+
         {activeTab === "effects" && (
           <div className="text-sm text-zinc-400">
             <p className="text-center mt-8">Effect controls coming soon</p>

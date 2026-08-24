@@ -15,13 +15,18 @@ export interface DisplaySettings {
   opacity: number;
 }
 
+export interface AnimationSettings {
+  noiseScale: number;
+  animationSpeed: number;
+}
+
 export type ColorMode = "solid" | "gradient";
 
 export interface ColorSettings {
   mode: ColorMode;
   solidColor: string;
-  gradientColors: [string, string, string, string]; // now 4 colors
-  gradientMixes: [number, number, number, number]; // now 4 mixes
+  gradientColors: [string, string, string, string];
+  gradientMixes: [number, number, number, number];
 }
 
 export interface BlobStyle {
@@ -38,6 +43,11 @@ export const defaultDisplaySettings: DisplaySettings = {
   morphIntensity: 1,
   lightIntensity: 1,
   opacity: 1,
+};
+
+export const defaultAnimationSettings: AnimationSettings = {
+  noiseScale: 0.4,
+  animationSpeed: 0.2,
 };
 
 export const defaultColorSettings: ColorSettings = {
@@ -131,6 +141,9 @@ export function useBlob() {
   const [displaySettings, setDisplaySettings] = useState<DisplaySettings>(
     defaultDisplaySettings,
   );
+  const [animationSettings, setAnimationSettings] = useState<AnimationSettings>(
+    defaultAnimationSettings,
+  );
   const [colorSettings, setColorSettings] =
     useState<ColorSettings>(defaultColorSettings);
 
@@ -146,13 +159,17 @@ export function useBlob() {
   const reset = () => {
     setShape(generateRandomShape());
     setDisplaySettings(defaultDisplaySettings);
+    setAnimationSettings(defaultAnimationSettings);
     setColorSettings(defaultColorSettings);
   };
 
   return {
     blobStyle,
+    shape,
     displaySettings,
     setDisplaySettings,
+    animationSettings,
+    setAnimationSettings,
     colorSettings,
     setColorSettings,
     randomize,
