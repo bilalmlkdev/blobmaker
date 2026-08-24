@@ -1,12 +1,18 @@
-import { ChevronRight, Shuffle, RotateCcw } from "lucide-react";
+import { ChevronRight, Shuffle, RotateCcw, Code2 } from "lucide-react";
 
 interface Props {
   onClose: () => void;
   onRandomize: () => void;
   onReset: () => void;
+  onGetCode: () => void;
 }
 
-export default function Sidebar({ onClose, onRandomize, onReset }: Props) {
+export default function Sidebar({
+  onClose,
+  onRandomize,
+  onReset,
+  onGetCode,
+}: Props) {
   return (
     <aside className="absolute top-6 right-6 w-80 max-w-[calc(100vw-3rem)] p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl z-10">
       {/* Header */}
@@ -25,7 +31,7 @@ export default function Sidebar({ onClose, onRandomize, onReset }: Props) {
       </div>
 
       {/* Action buttons */}
-      <div className="flex gap-3">
+      <div className="flex gap-3 mb-3">
         <button
           onClick={onReset}
           className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium"
@@ -41,6 +47,15 @@ export default function Sidebar({ onClose, onRandomize, onReset }: Props) {
           Random
         </button>
       </div>
+
+      {/* Get code button */}
+      <button
+        onClick={onGetCode}
+        className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium"
+      >
+        <Code2 className="w-4 h-4" />
+        Get Component Code
+      </button>
     </aside>
   );
 }
