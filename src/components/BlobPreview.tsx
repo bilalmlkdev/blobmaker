@@ -1,4 +1,4 @@
-import  type { BlobStyle } from "../hooks/useBlob";
+import type { BlobStyle } from "../hooks/useBlob";
 
 interface Props {
   blobStyle: BlobStyle;
@@ -6,9 +6,9 @@ interface Props {
 
 export default function BlobPreview({ blobStyle }: Props) {
   return (
-    <main className="flex-1 flex items-center justify-center p-10">
+    <main className="absolute inset-0 flex items-center justify-center">
       <div
-        className="w-64 h-64 transition-all duration-300 ease-out"
+        className="w-72 h-72 md:w-96 md:h-96 transition-all duration-300 ease-out"
         style={{
           borderRadius: blobStyle.borderRadius,
           transform: blobStyle.transform,
