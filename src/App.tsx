@@ -2,10 +2,10 @@ import { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import BlobPreview from "./components/BlobPreview";
 import CodeModal from "./components/CodeModal";
-import { generateRandomBlob } from "./hooks/useBlob";
 import { useLocalStorage } from "./hooks/useLocalStorage";
+import { generateRandomBlob } from "./hooks/useBlob";
+import type { BlobStyle } from "./hooks/useBlob";
 import { Settings } from "lucide-react";
-import type {BlobStyle} from './hooks/useBlob'
 
 function App() {
   const [blobStyle, setBlobStyle] = useState<BlobStyle>(generateRandomBlob);
