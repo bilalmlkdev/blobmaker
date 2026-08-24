@@ -10,12 +10,16 @@ import {
   Sparkles,
   Download,
 } from "lucide-react";
+import Slider from "./Slider";
+import type { DisplaySettings } from "../hooks/useBlob";
 
 interface Props {
   onClose: () => void;
   onRandomize: () => void;
   onReset: () => void;
   onGetCode: () => void;
+  displaySettings: DisplaySettings;
+  onDisplaySettingsChange: (settings: DisplaySettings) => void;
 }
 
 type TabId = "display" | "colors" | "animate" | "effects" | "download";
@@ -33,8 +37,17 @@ export default function Sidebar({
   onRandomize,
   onReset,
   onGetCode,
+  displaySettings,
+  onDisplaySettingsChange,
 }: Props) {
   const [activeTab, setActiveTab] = useState<TabId>("display");
+
+  const updateDisplaySetting = (key: keyof DisplaySettings, value: number) => {
+    onDisplaySettingsChange({
+      ...displaySettings,
+      [key]: value,
+    });
+  };
 
   return (
     <aside className="absolute top-6 right-6 w-80 max-w-[calc(100vw-3rem)] p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl z-10">
@@ -106,9 +119,47 @@ export default function Sidebar({
       {/* Tab content area */}
       <div className="bg-black/20 rounded-xl p-4 min-h-[200px] border border-white/5">
         {activeTab === "display" && (
-          <div className="text-sm text-zinc-400">
-            {/* Display controls will go here */}
-            <p className="text-center mt-8">Display controls coming soon</p>
+          <div>
+            <Slider
+              label="Scale (Size)"
+              value={displaySettings.scale}
+              min={0.6}
+              max={1.5}
+              step={0.01}
+              onChange={(v) => updateDisplaySetting("scale", v)}
+            />
+            <Slider
+              label="Detail Level"
+              value={displaySettings.detailLevel}
+              min={20}
+              max={32}
+              step={0.01}
+              onChange={(v) => updateDisplaySetting("detailLevel", v)}
+            />
+            <Slider
+              label="Morph Intensity"
+              value={displaySettings.morphIntensity}
+              min={0.5}
+              max={1.5}
+              step={0.01}
+              onChange={(v) => updateDisplaySetting("morphIntensity", v)}
+            />
+            <Slider
+              label="Light Intensity"
+              value={displaySettings.lightIntensity}
+              min={0.5}
+              max={1}
+              step={0.01}
+              onChange={(v) => updateDisplaySetting("lightIntensity", v)}
+            />
+            <Slider
+              label="Opacity"
+              value={displaySettings.opacity}
+              min={0}
+              max={1}
+              step={0.01}
+              onChange={(v) => updateDisplaySetting("opacity", v)}
+            />
           </div>
         )}
         {activeTab === "colors" && (

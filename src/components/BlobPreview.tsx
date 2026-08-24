@@ -13,6 +13,7 @@ export default function BlobPreview({ blobStyle }: Props) {
           borderRadius: blobStyle.borderRadius,
           transform: blobStyle.transform,
           background: blobStyle.background,
+          opacity: blobStyle.opacity,
         }}
       />
     </main>

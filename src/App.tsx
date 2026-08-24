@@ -3,20 +3,17 @@ import Sidebar from "./components/Sidebar";
 import BlobPreview from "./components/BlobPreview";
 import CodeModal from "./components/CodeModal";
 import { useLocalStorage } from "./hooks/useLocalStorage";
-import { generateRandomBlob } from "./hooks/useBlob";
-import type { BlobStyle } from "./hooks/useBlob";
+import { useBlob } from "./hooks/useBlob";
 import { Settings } from "lucide-react";
 
 function App() {
-  const [blobStyle, setBlobStyle] = useState<BlobStyle>(generateRandomBlob);
+  const { blobStyle, displaySettings, setDisplaySettings, randomize, reset } =
+    useBlob();
   const [isSidebarOpen, setIsSidebarOpen] = useLocalStorage<boolean>(
     "blobmaker:sidebarOpen",
     true,
   );
   const [isCodeModalOpen, setIsCodeModalOpen] = useState(false);
-
-  const randomize = () => setBlobStyle(generateRandomBlob());
-  const reset = () => setBlobStyle(generateRandomBlob()); // Replace with default later
 
   const closeSidebar = () => setIsSidebarOpen(false);
   const openSidebar = () => setIsSidebarOpen(true);
@@ -31,6 +28,8 @@ function App() {
           onRandomize={randomize}
           onReset={reset}
           onGetCode={() => setIsCodeModalOpen(true)}
+          displaySettings={displaySettings}
+          onDisplaySettingsChange={setDisplaySettings}
         />
       ) : (
         <button

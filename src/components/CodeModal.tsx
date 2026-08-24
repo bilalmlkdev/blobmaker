@@ -14,7 +14,10 @@ export default function CodeModal({ blobStyle, onClose }: Props) {
   const [copied, setCopied] = useState(false);
 
   const getCode = (tab: Tab): string => {
-    const styleString = `borderRadius: '${blobStyle.borderRadius}',\n  transform: '${blobStyle.transform}',\n  background: '${blobStyle.background}'`;
+    const styleString = `borderRadius: '${blobStyle.borderRadius}',
+  transform: '${blobStyle.transform}',
+  background: '${blobStyle.background}',
+  opacity: ${blobStyle.opacity}`;
 
     switch (tab) {
       case "react":
@@ -62,6 +65,7 @@ export default Blob`;
   border-radius: ${blobStyle.borderRadius};
   transform: ${blobStyle.transform};
   background: ${blobStyle.background};
+  opacity: ${blobStyle.opacity};
 }`;
       default:
         return "";
