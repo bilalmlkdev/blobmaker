@@ -169,6 +169,7 @@ export function useBlob() {
   );
   const [colorSettings, setColorSettings] =
     useState<ColorSettings>(defaultColorSettings);
+  const [is3D, setIs3D] = useState<boolean>(true); // default 3D mode
 
   const blobStyle = useMemo(
     () => generateBlob(shape, displaySettings, colorSettings),
@@ -185,7 +186,10 @@ export function useBlob() {
     setAnimationSettings(defaultAnimationSettings);
     setEffectSettings(defaultEffectSettings);
     setColorSettings(defaultColorSettings);
+    setIs3D(true); // reset to 3D mode
   };
+
+  const toggle3D = () => setIs3D((prev) => !prev);
 
   return {
     blobStyle,
@@ -198,6 +202,8 @@ export function useBlob() {
     setEffectSettings,
     colorSettings,
     setColorSettings,
+    is3D,
+    toggle3D,
     randomize,
     reset,
   };

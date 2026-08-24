@@ -18,6 +18,8 @@ function App() {
     setEffectSettings,
     colorSettings,
     setColorSettings,
+    is3D,
+    toggle3D,
     randomize,
     reset,
   } = useBlob();
@@ -38,6 +40,7 @@ function App() {
         morphIntensity={displaySettings.morphIntensity}
         animationSettings={animationSettings}
         effectSettings={effectSettings}
+        is3D={is3D}
       />
 
       {isSidebarOpen ? (
@@ -54,6 +57,8 @@ function App() {
           onEffectSettingsChange={setEffectSettings}
           colorSettings={colorSettings}
           onColorSettingsChange={setColorSettings}
+          is3D={is3D}
+          onToggle3D={toggle3D}
         />
       ) : (
         <button

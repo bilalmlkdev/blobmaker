@@ -12,6 +12,7 @@ import {
   Check,
   FileImage,
   FileCode2,
+  Box,
 } from "lucide-react";
 import Slider from "./Slider";
 import ColorPickerRow from "./ColorPickerRow";
@@ -37,6 +38,8 @@ interface Props {
   onEffectSettingsChange: (settings: EffectSettings) => void;
   colorSettings: ColorSettings;
   onColorSettingsChange: (settings: ColorSettings) => void;
+  is3D: boolean;
+  onToggle3D: () => void;
 }
 
 type TabId = "display" | "colors" | "animate" | "effects" | "download";
@@ -62,6 +65,8 @@ export default function Sidebar({
   onEffectSettingsChange,
   colorSettings,
   onColorSettingsChange,
+  is3D,
+  onToggle3D,
 }: Props) {
   const [activeTab, setActiveTab] = useState<TabId>("display");
 
@@ -190,6 +195,15 @@ export default function Sidebar({
           Random
         </button>
       </div>
+
+      {/* 3D / Normal toggle button */}
+      <button
+        onClick={onToggle3D}
+        className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium mb-3"
+      >
+        <Box className="w-4 h-4" />
+        {is3D ? "Normal Blob" : "3D Blob"}
+      </button>
 
       {/* Get code button */}
       <button

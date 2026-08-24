@@ -12,6 +12,7 @@ interface Props {
   morphIntensity: number;
   animationSettings: AnimationSettings;
   effectSettings: EffectSettings;
+  is3D: boolean;
 }
 
 export default function BlobPreview({
@@ -20,6 +21,7 @@ export default function BlobPreview({
   morphIntensity,
   animationSettings,
   effectSettings,
+  is3D,
 }: Props) {
   const blobRef = useRef<HTMLDivElement>(null);
 
@@ -75,10 +77,20 @@ export default function BlobPreview({
     reflectionStrength * 0.6
   }) 0%, rgba(255,255,255,0) 60%)`;
 
+  // 3D shading overlay (only when is3D is true)
+  const shadingOverlay = `
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,0.4) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(0,0,0,0.3) 0%, transparent 60%)
+  `;
+
+  // 3D box shadow for depth
+  const boxShadow = is3D
+    ? "inset 0 0 20px rgba(0,0,0,0.4), 0 20px 40px rgba(0,0,0,0.6)"
+    : "none";
+
   return (
     <main className="absolute inset-0 flex items-center justify-center">
       <div id="blob-container" className="relative w-72 h-72 md:w-96 md:h-96">
-        {/* Main blob */}
         <div
           ref={blobRef}
           className="absolute inset-0"
@@ -88,9 +100,22 @@ export default function BlobPreview({
             background: blobStyle.background,
             opacity: blobStyle.opacity,
             filter,
+            boxShadow,
           }}
         >
-          {/* Emissive overlay (inside blob) */}
+          {/* 3D shading overlay */}
+          {is3D && (
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                borderRadius: "inherit",
+                background: shadingOverlay,
+                mixBlendMode: "overlay",
+              }}
+            />
+          )}
+
+          {/* Emissive overlay */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
@@ -100,7 +125,8 @@ export default function BlobPreview({
               mixBlendMode: "screen",
             }}
           />
-          {/* Reflection overlay (inside blob) */}
+
+          {/* Reflection overlay */}
           {reflectionStrength > 0 && (
             <div
               className="absolute inset-0 pointer-events-none"
