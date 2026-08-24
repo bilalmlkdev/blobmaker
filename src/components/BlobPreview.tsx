@@ -23,7 +23,7 @@ export default function BlobPreview({
 }: Props) {
   const blobRef = useRef<HTMLDivElement>(null);
 
-  // Animation loop: directly manipulate border-radius for smooth morphing
+  // Animation loop: directly manipulate border-radius of the main blob
   useEffect(() => {
     const element = blobRef.current;
     if (!element) return;
@@ -58,50 +58,61 @@ export default function BlobPreview({
     return () => cancelAnimationFrame(animationFrameId);
   }, [shape, morphIntensity, animationSettings]);
 
-  // Apply effects via CSS
   const { emissiveColor, emissiveIntensity, reflectionStrength, roughness } =
     effectSettings;
-
-  const boxShadow = `0 0 ${20 * emissiveIntensity}px ${
-    5 * emissiveIntensity
-  }px ${emissiveColor}`;
-
-  const reflectionOverlay = `linear-gradient(135deg, rgba(255,255,255,${
-    reflectionStrength * 0.6
-  }) 0%, rgba(255,255,255,0) 60%)`;
 
   // Roughness simulated via filter contrast/saturate
   const filter = `contrast(${1 + (roughness - 0.5) * 0.3}) saturate(${
     1 + (roughness - 0.5) * 0.5
   })`;
 
+  // Emissive overlay: radial glow inside the blob
+  const emissiveBackground = `radial-gradient(circle at 50% 50%, ${emissiveColor}, transparent 70%)`;
+  const emissiveOpacity = Math.min(emissiveIntensity * 0.8, 1);
+
+  // Reflection overlay: diagonal sheen
+  const reflectionOverlay = `linear-gradient(135deg, rgba(255,255,255,${
+    reflectionStrength * 0.6
+  }) 0%, rgba(255,255,255,0) 60%)`;
+
   return (
     <main className="absolute inset-0 flex items-center justify-center">
-      <div
-        ref={blobRef}
-        className="w-72 h-72 md:w-96 md:h-96"
-        style={{
-          borderRadius: blobStyle.borderRadius, // initial before animation takes over
-          transform: blobStyle.transform,
-          background: blobStyle.background,
-          opacity: blobStyle.opacity,
-          boxShadow,
-          filter,
-          // Reflection overlay using backgroundImage? We already have background, so we use a pseudo-element via overlay
-        }}
-      />
-      {/* Reflection overlay (optional) */}
-      {reflectionStrength > 0 && (
+      <div id="blob-container" className="relative w-72 h-72 md:w-96 md:h-96">
+        {/* Main blob */}
         <div
-          className="absolute w-72 h-72 md:w-96 md:h-96 pointer-events-none"
+          ref={blobRef}
+          className="absolute inset-0"
           style={{
-            background: reflectionOverlay,
             borderRadius: blobStyle.borderRadius,
             transform: blobStyle.transform,
-            opacity: 0.7,
+            background: blobStyle.background,
+            opacity: blobStyle.opacity,
+            filter,
           }}
-        />
-      )}
+        >
+          {/* Emissive overlay (inside blob) */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              borderRadius: "inherit",
+              background: emissiveBackground,
+              opacity: emissiveOpacity,
+              mixBlendMode: "screen",
+            }}
+          />
+          {/* Reflection overlay (inside blob) */}
+          {reflectionStrength > 0 && (
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                borderRadius: "inherit",
+                background: reflectionOverlay,
+                opacity: 0.7,
+              }}
+            />
+          )}
+        </div>
+      </div>
     </main>
   );
 }

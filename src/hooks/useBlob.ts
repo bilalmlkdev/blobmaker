@@ -44,6 +44,12 @@ export interface BlobStyle {
 }
 
 // ---------- Defaults ----------
+export const defaultShape: BlobShape = {
+  radii: [40, 60, 50, 50, 45, 55, 60, 40],
+  rotation: 0,
+  gradientAngle: 135,
+};
+
 export const defaultDisplaySettings: DisplaySettings = {
   scale: 1,
   detailLevel: 26,
@@ -151,7 +157,7 @@ export function generateBlob(
 }
 
 export function useBlob() {
-  const [shape, setShape] = useState<BlobShape>(generateRandomShape);
+  const [shape, setShape] = useState<BlobShape>(defaultShape);
   const [displaySettings, setDisplaySettings] = useState<DisplaySettings>(
     defaultDisplaySettings,
   );
@@ -174,7 +180,7 @@ export function useBlob() {
   };
 
   const reset = () => {
-    setShape(generateRandomShape());
+    setShape(defaultShape);
     setDisplaySettings(defaultDisplaySettings);
     setAnimationSettings(defaultAnimationSettings);
     setEffectSettings(defaultEffectSettings);
