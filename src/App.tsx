@@ -7,8 +7,15 @@ import { useBlob } from "./hooks/useBlob";
 import { Settings } from "lucide-react";
 
 function App() {
-  const { blobStyle, displaySettings, setDisplaySettings, randomize, reset } =
-    useBlob();
+  const {
+    blobStyle,
+    displaySettings,
+    setDisplaySettings,
+    colorSettings,
+    setColorSettings,
+    randomize,
+    reset,
+  } = useBlob();
   const [isSidebarOpen, setIsSidebarOpen] = useLocalStorage<boolean>(
     "blobmaker:sidebarOpen",
     true,
@@ -30,6 +37,8 @@ function App() {
           onGetCode={() => setIsCodeModalOpen(true)}
           displaySettings={displaySettings}
           onDisplaySettingsChange={setDisplaySettings}
+          colorSettings={colorSettings}
+          onColorSettingsChange={setColorSettings}
         />
       ) : (
         <button

@@ -9,9 +9,15 @@ import {
   Wand2,
   Sparkles,
   Download,
+  Check,
 } from "lucide-react";
 import Slider from "./Slider";
-import type { DisplaySettings } from "../hooks/useBlob";
+import ColorPickerRow from "./ColorPickerRow";
+import type {
+  DisplaySettings,
+  ColorSettings,
+  ColorMode,
+} from "../hooks/useBlob";
 
 interface Props {
   onClose: () => void;
@@ -20,6 +26,8 @@ interface Props {
   onGetCode: () => void;
   displaySettings: DisplaySettings;
   onDisplaySettingsChange: (settings: DisplaySettings) => void;
+  colorSettings: ColorSettings;
+  onColorSettingsChange: (settings: ColorSettings) => void;
 }
 
 type TabId = "display" | "colors" | "animate" | "effects" | "download";
@@ -39,6 +47,8 @@ export default function Sidebar({
   onGetCode,
   displaySettings,
   onDisplaySettingsChange,
+  colorSettings,
+  onColorSettingsChange,
 }: Props) {
   const [activeTab, setActiveTab] = useState<TabId>("display");
 
@@ -46,6 +56,47 @@ export default function Sidebar({
     onDisplaySettingsChange({
       ...displaySettings,
       [key]: value,
+    });
+  };
+
+  // Color settings update helpers
+  const setColorMode = (mode: ColorMode) => {
+    onColorSettingsChange({
+      ...colorSettings,
+      mode,
+    });
+  };
+
+  const updateGradientColor = (index: number, color: string) => {
+    const newColors = [...colorSettings.gradientColors] as [
+      string,
+      string,
+      string,
+    ];
+    newColors[index] = color;
+    onColorSettingsChange({
+      ...colorSettings,
+      gradientColors: newColors,
+    });
+  };
+
+  const updateGradientMix = (index: number, value: number) => {
+    const newMixes = [...colorSettings.gradientMixes] as [
+      number,
+      number,
+      number,
+    ];
+    newMixes[index] = value;
+    onColorSettingsChange({
+      ...colorSettings,
+      gradientMixes: newMixes,
+    });
+  };
+
+  const updateSolidColor = (color: string) => {
+    onColorSettingsChange({
+      ...colorSettings,
+      solidColor: color,
     });
   };
 
@@ -162,11 +213,99 @@ export default function Sidebar({
             />
           </div>
         )}
+
         {activeTab === "colors" && (
-          <div className="text-sm text-zinc-400">
-            <p className="text-center mt-8">Color controls coming soon</p>
+          <div>
+            {/* Toggle: Solid Color */}
+            <div className="mb-2">
+              <button
+                onClick={() => setColorMode("solid")}
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg border transition-colors ${
+                  colorSettings.mode === "solid"
+                    ? "bg-violet-600/20 border-violet-500"
+                    : "bg-white/5 border-white/10 hover:bg-white/10"
+                }`}
+              >
+                <span className="text-sm font-medium">Use Solid Color</span>
+                {colorSettings.mode === "solid" && (
+                  <Check className="w-4 h-4 text-violet-400" />
+                )}
+              </button>
+              {colorSettings.mode === "solid" && (
+                <div className="mt-2 p-3 bg-black/20 rounded-lg border border-white/5">
+                  <ColorPickerRow
+                    label="Solid Color"
+                    color={colorSettings.solidColor}
+                    onChange={updateSolidColor}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Toggle: Gradient */}
+            <div>
+              <button
+                onClick={() => setColorMode("gradient")}
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg border transition-colors ${
+                  colorSettings.mode === "gradient"
+                    ? "bg-violet-600/20 border-violet-500"
+                    : "bg-white/5 border-white/10 hover:bg-white/10"
+                }`}
+              >
+                <span className="text-sm font-medium">Use Gradient</span>
+                {colorSettings.mode === "gradient" && (
+                  <Check className="w-4 h-4 text-violet-400" />
+                )}
+              </button>
+              {colorSettings.mode === "gradient" && (
+                <div className="mt-2 p-3 bg-black/20 rounded-lg border border-white/5">
+                  <ColorPickerRow
+                    label="Color 1"
+                    color={colorSettings.gradientColors[0]}
+                    onChange={(c) => updateGradientColor(0, c)}
+                  />
+                  <ColorPickerRow
+                    label="Color 2"
+                    color={colorSettings.gradientColors[1]}
+                    onChange={(c) => updateGradientColor(1, c)}
+                  />
+                  <ColorPickerRow
+                    label="Color 3"
+                    color={colorSettings.gradientColors[2]}
+                    onChange={(c) => updateGradientColor(2, c)}
+                  />
+                  <div className="mt-4">
+                    <Slider
+                      label="Color Mix 1"
+                      value={colorSettings.gradientMixes[0]}
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      onChange={(v) => updateGradientMix(0, v)}
+                    />
+                    <Slider
+                      label="Color Mix 2"
+                      value={colorSettings.gradientMixes[1]}
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      onChange={(v) => updateGradientMix(1, v)}
+                    />
+                    <Slider
+                      label="Color Mix 3"
+                      value={colorSettings.gradientMixes[2]}
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      onChange={(v) => updateGradientMix(2, v)}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         )}
+
         {activeTab === "animate" && (
           <div className="text-sm text-zinc-400">
             <p className="text-center mt-8">Animation controls coming soon</p>
