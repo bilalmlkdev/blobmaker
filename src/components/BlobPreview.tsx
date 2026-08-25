@@ -1,52 +1,24 @@
-import type {
-  BlobStyle,
-  BlobShape,
-  AnimationSettings,
-  EffectSettings,
-  DisplaySettings,
-  ColorSettings,
-} from "../hooks/useBlob";
-import CSSBlobPreview from "./CSSBlobPreview";
-import ThreeBlobPreview from "./ThreeBlobPreview";
-
-interface Props {
-  blobStyle: BlobStyle;
-  shape: BlobShape;
-  displaySettings: DisplaySettings;
-  animationSettings: AnimationSettings;
-  effectSettings: EffectSettings;
-  colorSettings: ColorSettings;
-  is3D: boolean;
+interface BlobPreviewProps {
+  path: string;
+  size: number;
+  color: string;
 }
 
-export default function BlobPreview({
-  blobStyle,
-  shape,
-  displaySettings,
-  animationSettings,
-  effectSettings,
-  colorSettings,
-  is3D,
-}: Props) {
-  if (is3D) {
-    return (
-      <ThreeBlobPreview
-        shape={shape}
-        displaySettings={displaySettings}
-        animationSettings={animationSettings}
-        effectSettings={effectSettings}
-        colorSettings={colorSettings}
-      />
-    );
-  }
-
+/** Renders the live blob shape inside a bordered, dashed square canvas area. */
+export function BlobPreview({ path, size, color }: BlobPreviewProps) {
   return (
-    <CSSBlobPreview
-      blobStyle={blobStyle}
-      shape={shape}
-      morphIntensity={displaySettings.morphIntensity}
-      animationSettings={animationSettings}
-      effectSettings={effectSettings}
-    />
+    <div className="flex flex-1 items-center justify-center px-4 pb-6">
+      <div className="flex h-[min(72vw,420px)] w-[min(72vw,420px)] items-center justify-center rounded-2xl border border-dashed border-neutral-300 bg-white sm:h-[420px] sm:w-[420px]">
+        <svg
+          viewBox={`0 0 ${size} ${size}`}
+          width="82%"
+          height="82%"
+          role="img"
+          aria-label="Generated blob shape preview"
+        >
+          <path d={path} fill={color} className="transition-[d] duration-300 ease-out" />
+        </svg>
+      </div>
+    </div>
   );
 }

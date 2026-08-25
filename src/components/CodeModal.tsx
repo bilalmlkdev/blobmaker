@@ -1,143 +1,109 @@
-import { useState } from "react";
-import { X, Copy, Check } from "lucide-react";
-import type { BlobStyle } from "../hooks/useBlob";
+import { useEffect, useState } from "react";
+import {
+  generateSnippet,
+  SNIPPET_LANGUAGES,
+  type SnippetLanguage,
+} from "../lib/codeSnippets";
+import { copyToClipboard } from "../lib/download";
+import { CheckIcon, CloseIcon, CopyIcon } from "./icons";
 
-interface Props {
-  blobStyle: BlobStyle;
+interface CodeModalProps {
+  path: string;
+  size: number;
+  color: string;
   onClose: () => void;
 }
 
-type Tab = "react" | "nextjs" | "html";
-
-export default function CodeModal({ blobStyle, onClose }: Props) {
-  const [activeTab, setActiveTab] = useState<Tab>("react");
+/** A modal dialog that lets users copy the blob as SVG, React, or CSS code. */
+export function CodeModal({ path, size, color, onClose }: CodeModalProps) {
+  const [language, setLanguage] = useState<SnippetLanguage>("svg");
   const [copied, setCopied] = useState(false);
 
-  const getCode = (tab: Tab): string => {
-    const styleString = `borderRadius: '${blobStyle.borderRadius}',
-  transform: '${blobStyle.transform}',
-  background: '${blobStyle.background}',
-  opacity: ${blobStyle.opacity}`;
-
-    switch (tab) {
-      case "react":
-        return `import React from 'react'
-
-const Blob = () => {
-  return (
-    <div
-      style={{
-        width: '300px',
-        height: '300px',
-        ${styleString}
-      }}
-    />
-  )
-}
-
-export default Blob`;
-      case "nextjs":
-        return `'use client'
-
-import React from 'react'
-
-const Blob = () => {
-  return (
-    <div
-      style={{
-        width: '300px',
-        height: '300px',
-        ${styleString}
-      }}
-    />
-  )
-}
-
-export default Blob`;
-      case "html":
-        return `<!-- HTML -->
-<div class="blob"></div>
-
-<!-- CSS -->
-.blob {
-  width: 300px;
-  height: 300px;
-  border-radius: ${blobStyle.borderRadius};
-  transform: ${blobStyle.transform};
-  background: ${blobStyle.background};
-  opacity: ${blobStyle.opacity};
-}`;
-      default:
-        return "";
+  useEffect(() => {
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") onClose();
     }
-  };
+    document.addEventListener("keydown", handleEscape);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
 
-  const copyCode = async () => {
-    const code = getCode(activeTab);
-    await navigator.clipboard.writeText(code);
+  const snippet = generateSnippet(language, { path, size, color });
+
+  async function handleCopy() {
+    await copyToClipboard(snippet);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+    setTimeout(() => setCopied(false), 1800);
+  }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="w-full max-w-2xl bg-zinc-900 border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
-        {/* Modal header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
-          <h3 className="text-lg font-semibold">Export Component Code</h3>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Blob code export"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+      onClick={onClose}
+    >
+      <div
+        onClick={(event) => event.stopPropagation()}
+        className="flex max-h-[80vh] w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-2xl"
+      >
+        <div className="flex items-center justify-between border-b border-neutral-200 px-5 py-4">
+          <h2 className="text-sm font-semibold text-black">Copy blob code</h2>
           <button
+            type="button"
             onClick={onClose}
-            className="p-1 rounded-lg hover:bg-white/10 transition-colors"
-            aria-label="Close"
+            aria-label="Close dialog"
+            className="text-neutral-500 transition-colors hover:text-black cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <CloseIcon width={18} height={18} />
           </button>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-2 px-6 py-3 border-b border-white/10">
-          {(["react", "nextjs", "html"] as Tab[]).map((tab) => (
+        <div className="flex gap-2 px-5 pt-4">
+          {SNIPPET_LANGUAGES.map((lang) => (
             <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                activeTab === tab
-                  ? "bg-violet-600 text-white"
-                  : "bg-white/5 hover:bg-white/10 text-zinc-300"
+              key={lang.id}
+              type="button"
+              onClick={() => setLanguage(lang.id)}
+              className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${
+                language === lang.id
+                  ? "bg-black text-white"
+                  : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
               }`}
             >
-              {tab === "react"
-                ? "React"
-                : tab === "nextjs"
-                  ? "Next.js"
-                  : "HTML/CSS"}
+              {lang.label}
             </button>
           ))}
         </div>
 
-        {/* Code block */}
-        <div className="p-6">
-          <div className="relative">
-            <pre className="bg-zinc-950 border border-white/10 rounded-xl p-4 overflow-x-auto text-sm text-zinc-200">
-              <code>{getCode(activeTab)}</code>
-            </pre>
-            <button
-              onClick={copyCode}
-              className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-xs font-medium"
-            >
-              {copied ? (
-                <>
-                  <Check className="w-4 h-4 text-green-400" />
-                  Copied!
-                </>
-              ) : (
-                <>
-                  <Copy className="w-4 h-4" />
-                  Copy
-                </>
-              )}
-            </button>
-          </div>
+        <div className="relative m-5 mt-4 flex-1 overflow-auto rounded-xl bg-neutral-950">
+          <pre className="max-h-72 overflow-auto p-4 text-xs leading-relaxed text-neutral-100">
+            <code>{snippet}</code>
+          </pre>
+        </div>
+
+        <div className="flex justify-end border-t border-neutral-200 px-5 py-4">
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="flex items-center gap-1.5 rounded-full bg-black px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-80 cursor-pointer"
+          >
+            {copied ? (
+              <>
+                <CheckIcon width={16} height={16} />
+                Copied
+              </>
+            ) : (
+              <>
+                <CopyIcon width={16} height={16} />
+                Copy code
+              </>
+            )}
+          </button>
         </div>
       </div>
     </div>
