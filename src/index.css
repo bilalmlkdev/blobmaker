@@ -1,0 +1,195 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+/* Custom scrollbar (optional) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* Custom range slider thumb, tuned for dark surfaces */
+.slider {
+  background: #27272a;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 2px solid #000000;
+  box-shadow: 0 0 0 1px #ffffff;
+  cursor: pointer;
+  margin-top: 0;
+}
+
+.slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 2px solid #000000;
+  box-shadow: 0 0 0 1px #ffffff;
+  cursor: pointer;
+}
+
+.slider::-moz-range-track {
+  background: transparent;
+}
+
+/* Slider thumb grows slightly on drag for tactile feedback */
+.slider:active::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+
+.slider::-webkit-slider-thumb {
+  transition:
+    transform 150ms ease-out,
+    background-color 150ms ease-out;
+}
+
+/* Blob animation keyframes */
+@keyframes blob-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes blob-morph {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.05) rotate(3deg);
+  }
+  50% {
+    transform: scale(0.96) rotate(-2deg);
+  }
+  75% {
+    transform: scale(1.03) rotate(2deg);
+  }
+}
+
+@keyframes blob-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.9);
+    opacity: 0.85;
+  }
+}
+
+.animate-blob-rotate {
+  animation: blob-rotate 8s linear infinite;
+}
+
+.animate-blob-morph {
+  animation: blob-morph 6s ease-in-out infinite;
+}
+
+.animate-blob-pulse {
+  animation: blob-pulse 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-blob-rotate,
+  .animate-blob-morph,
+  .animate-blob-pulse {
+    animation: none;
+  }
+}
+
+/* UI entrance transitions */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 180ms ease-out;
+}
+
+.animate-scale-in {
+  animation: scale-in 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-pop-in {
+  animation: pop-in 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-scale-in,
+  .animate-pop-in {
+    animation: none;
+  }
+}
+
+/* Loading screen progress bar */
+@keyframes loading-bar {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+.animate-loading-bar {
+  animation: loading-bar 900ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
